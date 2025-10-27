@@ -1,0 +1,24 @@
+name: Auto Update Submodule
+
+on:
+  repository_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-submodule:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main repo
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update submodule reference
+        run: |
+          git submodule update --remote --merge
+          git add test2
+          git commit -m "Auto-update test2 submodule"
+          git push
